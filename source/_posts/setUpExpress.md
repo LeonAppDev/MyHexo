@@ -8,8 +8,7 @@ tags:
 
 I put my customer configuration in nginx configuraion file in /etc/nginx/common_http.conf.
 
-Nginx configuration is quite important for reverse proxy, you need to read through the configuraion, since lacation has complicated match rules. I met an issue when I set a location part ```location /nodeapp/ {
-}```, but /nodeapp/app-docs/swagger-ui-init.js does not go into this location, at first I thought it is because swagger-ui-express uses related route, but then I find out localhost:3000/app-docs/swagger-ui-inti.js is good to go, and I also use ```curl localhost:3000/app-docs/swagger-ui-inti.js``` in linux server and it gets the javascript file as well, so finally I find out it is because there is another location rule ``` location ~* \.(?:css|js)$```. This article describes how it works [一文弄懂Nginx的location匹配](https://segmentfault.com/a/1190000013267839)
+Nginx configuration is quite important for reverse proxy, you need to read through the configuraion, since lacation has complicated match rules. I met an issue when I set a location part ```location /nodeapp/ {}```, but /nodeapp/app-docs/swagger-ui-init.js does not go into this location, at first I thought it is because swagger-ui-express uses related route, but then I find out localhost:3000/app-docs/swagger-ui-inti.js is good to go, and I also use ```curl localhost:3000/app-docs/swagger-ui-inti.js``` in linux server and it gets the javascript file as well, so finally I find out it is because there is another location rule ``` location ~* \.(?:css|js)$```. This article describes how it works [一文弄懂Nginx的location匹配](https://segmentfault.com/a/1190000013267839)
 
 
 
@@ -30,3 +29,26 @@ docker run --net=host -t -d node-web-app
 ## Add a logger system using winston
 
 It is quite handy to use winston to add a logger system, you could define logger level and how to export log in different stage when you define a logger and easy to modify the configutation in future.
+
+## Node.js best practice and issues
+
+1. When you use NODE_PATH in Node.js, it is quite peculiar if you use to export objects, you will not get what you need, below is a working code for me 
+```javascript
+// src/controller/high-tea/index.js
+const constants = require('../../constants');
+
+// src/constants.js
+
+module.exports = {
+	highTea: 'HighTea',
+};
+
+```
+   But if I write as below, I could not retrieve highTea 
+```javascript
+const constants = require('../../constants');
+
+```
+
+
+2. Try to send as small json asa possible to front-end
