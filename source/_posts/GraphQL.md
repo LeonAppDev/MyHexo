@@ -9,3 +9,13 @@ tags:
 
   It gives you a what you get is what you want experience.
   It all begins with the conception query, whenever you want to get something, you send a query(root query), a query could be either named or anonymous. and a named query can take a variable as argument, and you could ask for any element inside the query. The only inconvenience is if you want to find an element in a quite deep level, have to search from the root. So I do not recommend to put element to deep level, 3-4 levels are fine. 
+
+
+## Test
+
+Below is the good source for develop and test graplql server
+https://dev.to/iwilsonq/learn-to-architect-and-test-graphql-servers-by-observing-spectrum-5din
+
+## Best Practice
+
+https://www.graphql.com/guides/

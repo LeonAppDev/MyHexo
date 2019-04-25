@@ -119,3 +119,74 @@ To resolve try the following:
   1. Clear watchman watches: `watchman watch-del-all`.
   2. Delete the `node_modules` folder: `rm -rf node_modules && npm install`.
   3. Reset packager cache: `rm -fr $TMPDIR/react-*` or `npm start -- --reset-cache`.
+
+## install React Native Elements
+
+React Native Elements and Native Base are two good material ui library for react native, I installed both of them and meet issues on both
+
+### React Native Elements
+
+Issue for RNE is caused by react-native-vector-icon, since it needs to add reference in Android(Maybe in ios as well) configuration file, and when you use the easiest way, react-native link,  the route for react-native-vector-icon may be wrong, and I solve the issue by using below manually method (reference)[https://github.com/oblador/react-native-vector-icons#android] 
+
+```
+Option: Manually
+Copy the contents in the Fonts folder to android/app/src/main/assets/fonts (note lowercase font folder).
+Integrating library for getImageSource and ToolbarAndroid support
+These steps are optional and only needed if you want to use the Icon.getImageSource function or using custom icons in the Icon.ToolbarAndroid component.
+
+Edit android/settings.gradle to look like this (without the +):
+
+rootProject.name = 'MyApp'
+
+include ':app'
+
++ include ':react-native-vector-icons'
++ project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
+Edit android/app/build.gradle (note: app folder) to look like this:
+
+apply plugin: 'com.android.application'
+
+android {
+  ...
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile "com.android.support:appcompat-v7:23.0.1"
+  compile "com.facebook.react:react-native:+"  // From node_modules
++ compile project(':react-native-vector-icons')
+}
+Edit your MainApplication.java (deep in android/app/src/main/java/...) to look like this (note two places to edit):
+
+package com.myapp;
+
++ import com.oblador.vectoricons.VectorIconsPackage;
+
+....
+
+  @Override
+  protected List<ReactPackage> getPackages() {
+    return Arrays.<ReactPackage>asList(
+      new MainReactPackage()
++   , new VectorIconsPackage()
+    );
+  }
+
+}
+Note: If you're using React Native (Android) <= 0.17, follow this instructions
+```
+
+### Native Base
+
+I use a scaffold provied by native base to create a boilter, but meet below issue
+Error: Failed to crunch file
+
+It seems quite simple and people suggest 
+
+```
+From what I understood, Failed to crunch file means studio can't process the file. This error usually occurs when you hit Maximum File Path Length Limitation(240 characters) of Windows OS.
+
+I would suggest moving your project into upper directory (like D:\barcode-reader).
+```
+
+And typescript for react-native is not well supported by current lib, it is better to avoid use it now.
